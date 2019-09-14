@@ -6,7 +6,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 from scipy.spatial import distance as dist
 
-
 #define the colors of the sticky notes, formatted as BGR (not RGB!)
 white = np.array([255, 255, 255])
 red = np.array([81, 110, 214])
@@ -14,8 +13,6 @@ orange = np.array([50, 172, 244])
 yellow = np.array([80, 227, 239]) 
 pink = np.array([170, 143, 237])
 blue = np.array([202, 198, 117])
-
-image = cv.imread("training/LessGay.jpg")
 
 def maskByColor(image, color, lowTolerance, highTolerance):
     lower = np.full((1,3), -lowTolerance)
@@ -61,23 +58,27 @@ def order_points(pts):
 	# bottom-right, and bottom-left order
 	return np.array([tl, tr, br, bl], dtype="float32")
 
-approx = generatePoints(image, red, 90, 35)
-approx_trimmed = np.float32([x[0] for x in approx])
+def generateCalibrationTransformMatrix(image, color, lowTolerance, highTolerance, width, height):
+    approx = generatePoints(image, color, lowTolerance, highTolerance)
+    approx_trimmed = np.float32([x[0] for x in approx])
 
-pts1 = order_points(approx_trimmed)
-pts2 = np.float32([[0,0],[300,0],[300,300],[0,300]])
+    pts1 = order_points(approx_trimmed)
+    pts2 = np.float32([[0,0],[width,0],[width,height],[0,height]])
 
-transform_matrix = cv.getPerspectiveTransform(pts1, pts2)
+    transform_matrix = cv.getPerspectiveTransform(pts1, pts2)
+    return transform_matrix
+
+
+calImage = cv.imread("training/LessGay.jpg")
+grid_width = 400
+grid_height = 300
+transform_matrix = generateCalibrationTransformMatrix(calImage, red, 90, 35, grid_width, grid_height)
 
 #generate transformed image
-image_transformed = cv.warpPerspective(image, transform_matrix, (300,300))
-image2 = cv.imread("training/sticky.jpg")
-
-image2_transformed = cv.warpPerspective(image2, transform_matrix, (300, 300))
+image = cv.imread("training/green.jpg")
+image_transformed = cv.warpPerspective(image, transform_matrix, (grid_width, grid_height))
 
 
-#plt.subplot(121),plt.imshow(image),plt.title('image')
-#plt.subplot(122),plt.imshow(image_transformed),plt.title('image_transformed')
-plt.subplot(121),plt.imshow(image2),plt.title('image2')
-plt.subplot(122),plt.imshow(image2_transformed),plt.title('image2_transformed')
+plt.subplot(121),plt.imshow(image),plt.title('image')
+plt.subplot(122),plt.imshow(image_transformed),plt.title('image_transformed')
 plt.show()
