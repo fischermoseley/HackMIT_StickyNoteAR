@@ -9,13 +9,13 @@ SOCK = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 
 def sendjump(sock):
-    sock.sendto( ("JUMP!").encode(), (UDP_IP_ADDRESS, UDP_PORT_NO) )
+    sock.sendto(("JUMP!").encode(), (UDP_IP_ADDRESS, UDP_PORT_NO) )
     print("Jump Action Triggered!")
 
 
 def on_press(key):
     if key == Key.up:
-        sendjump
+        sendjump(SOCK)
     print('{0} pressed'.format(
         key))
 
