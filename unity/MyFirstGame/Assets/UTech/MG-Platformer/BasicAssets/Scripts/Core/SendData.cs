@@ -18,7 +18,9 @@ public class SendData : MonoBehaviour
      // prefs
     private string IP;  // define in init
     public int port;  // define in init
-   
+    
+    public bool connected;
+
     // "connection" things
     IPEndPoint remoteEndPoint;
     UdpClient client;
@@ -39,14 +41,16 @@ public class SendData : MonoBehaviour
 
     public void init()
     {
-        print("sending");
-
         IP="127.0.0.1";
         port=6150;
-       
+        connected = false;
+
         remoteEndPoint = new IPEndPoint(IPAddress.Parse(IP), port);
         client = new UdpClient();
-       
+
+        //run initial handshake to detect if it's working or not
+        sendString("hello");
+
         print("Sending to "+IP+" : "+port);
         print("Testing: nc -lu "+IP+" : "+port);
    
@@ -69,8 +73,6 @@ public class SendData : MonoBehaviour
 
     void OnGUI()
     {
-
-
         if (Input.GetKeyDown("u"))
         {   
             sendString("calibrate");
@@ -84,6 +86,9 @@ public class SendData : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (connected == false)
+        {
+           // print("can't connect to opencv");
+        }
     }
 }

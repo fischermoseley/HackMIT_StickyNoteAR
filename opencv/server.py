@@ -15,9 +15,11 @@ while True:
     bytesAddressPair = SOCK.recvfrom(bufferSize)
     message = bytesAddressPair[0]
 
+    print(message)
     translate = "{}".format(message)
-
+    
     if(translate=='calibrate'):
+        print("calibrate activated")
         #write the call function to fischers code
         #bytesToSend = ""
 
@@ -25,6 +27,8 @@ while True:
         SOCK.sendto(("I'm calibrating").encode())
 
     elif(translate=='sticky'):
+        print("sticky    activated")
+
         #write the call function to fischers code
         #bytesToSend = ""
 
