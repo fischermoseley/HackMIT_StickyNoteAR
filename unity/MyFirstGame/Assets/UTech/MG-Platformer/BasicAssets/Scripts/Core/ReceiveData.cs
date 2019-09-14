@@ -44,7 +44,7 @@ public class ReceiveData : MonoBehaviour
 
                 string text = Encoding.UTF8.GetString(data);
 
-                if (text && !connected)
+                if (text != null && !connected)
                 {
                     print("connected to UDP!");
                     connected = true;
@@ -61,6 +61,7 @@ public class ReceiveData : MonoBehaviour
     void Start()
     {
         port = 6150;
+        connected = false;
         InitUDP();
 
     }
@@ -68,9 +69,5 @@ public class ReceiveData : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!connected)
-        {
-            print("not yet connected to udp");
-        }
     }
 }
