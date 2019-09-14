@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf7219bab7fe46a1ad266029b2fee19, type: 3}
+  m_Name: Template Walkthrough
+  m_EditorClassIdentifier: 
+  icon: {fileID: 2800000, guid: 45fa956652b32114a89b0d587535bc02, type: 3}
+  title: Unity Platformer Template
+  description: 'Select a Walkthrough below to learn about the Unity interface and
+    some key workflows that will enable you to change parts of the Platformer Template. '
+  loadedLayout: 1
+  TextColorMainDarkSkin: {r: 1, g: 1, b: 1, a: 1}
+  TextColorMainLightSkin: {r: 0, g: 0, b: 0, a: 1}
+  TextColorSecondaryDarkSkin: {r: 1, g: 1, b: 1, a: 1}
+  TextColorSecondaryLightSkin: {r: 0, g: 0, b: 0, a: 1}
+  TextTitleSize: 12
+  TextProjectDescriptionSize: 12
+  TextHeadingSize: 12
+  TextBodySize: 12
+  ButtonTextSize: 12
+  sections:
+  - orderInView: 0
+    heading: 1. Introduction to Unity
+    text: 'Get an introduction to the main controls, views and windows in the Unity
+      interface.
+
+'
+    linkText: 
+    url: 
+    buttonText: Show Me
+    tutorial: {fileID: 11400000, guid: 92d21b44a68004daebe1f6c4e03b487a, type: 2}
+  - orderInView: 2
+    heading: 2. Changing Properties
+    text: 'Learn about the fundamental steps to building anything in Unity, including
+      how to change the property of something, such as its speed.
+
+'
+    linkText: 
+    url: 
+    buttonText: Let's Adjust
+    tutorial: {fileID: 11400000, guid: ef019b20e49b14cfca4e98ecf5fd345d, type: 2}
+  - orderInView: 4
+    heading: 3. Editing Colors in Unity
+    text: 'Understand what a Color Block is in Unity, and see how easy it is to change
+      the color of something in your game.
+
+'
+    linkText: 
+    url: 
+    buttonText: Let's Go
+    tutorial: {fileID: 11400000, guid: 83255933b1f9a13428ca582620d979c8, type: 2}
+  - orderInView: 6
+    heading: 4. Adding a Prefab
+    text: 'Learn about Prefabs in Unity and how they make it easy to add things to
+      your game.
+
+'
+    linkText: 
+    url: 
+    buttonText: Let's Add
+    tutorial: {fileID: 11400000, guid: 351b553575cb34b12945f5996095329d, type: 2}
+  - orderInView: 8
+    heading: 5. Build, Share, and Play
+    text: 'Create a build of your modded game that can be played and shared on the
+      web.
+
+'
+    linkText: 
+    url: 
+    buttonText: Let's Build
+    tutorial: {fileID: 11400000, guid: 5a1808b6ca2b3422381c2337d4a493b3, type: 2}
+  - orderInView: 10
+    heading: Keep Going
+    text: Add rainbows, witches hats, flames to your game, and more..
+    linkText: I'm ready!
+    url: https://learn.unity.com/project/2d-platformer-template?courseId=5c59cf22edbc2a001f59aa5d
+    buttonText: 
+    tutorial: {fileID: 0}
