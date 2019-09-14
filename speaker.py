@@ -1,5 +1,4 @@
 import socket
-import keyboard #make sure to pip install keyboard
 
 UDP_IP_ADDRESS = "127.0.0.1"
 UDP_PORT_NO = 6150
