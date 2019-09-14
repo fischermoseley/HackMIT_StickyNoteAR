@@ -59,7 +59,7 @@ namespace Platformer.Mechanics
             //UDP
             port = 6150;
             remoteJump = false;
-            InitUDP();
+            // InitUDP();
 
             health = GetComponent<Health>();
             audioSource = GetComponent<AudioSource>();
@@ -95,10 +95,23 @@ namespace Platformer.Mechanics
 
                 } catch(Exception e)
                 {
-                    print (e.ToString()); //7
+                    print (e.ToString());
                 }
             }
         }
+
+        // private void  (string data)
+        // {
+        //     try
+        //     {
+        //         byte[] data = Encoding.UTF8.GetBytes(message);
+                
+
+        //     } catch(Exception e)
+        //     {
+        //         print(e.ToString());
+        //     }
+        // }
 
         protected override void Update()
         {

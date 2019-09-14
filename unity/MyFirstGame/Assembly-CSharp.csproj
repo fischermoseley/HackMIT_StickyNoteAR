@@ -55,6 +55,8 @@
   <ItemGroup>
      <Compile Include="Assets\UTech\MG-Platformer\BasicAssets\Scripts\Core\Fuzzy.cs" />
      <Compile Include="Assets\UTech\MG-Platformer\BasicAssets\Scripts\Core\HeapQueue.cs" />
+     <Compile Include="Assets\UTech\MG-Platformer\BasicAssets\Scripts\Core\ReceiveData.cs" />
+     <Compile Include="Assets\UTech\MG-Platformer\BasicAssets\Scripts\Core\SendData.cs" />
      <Compile Include="Assets\UTech\MG-Platformer\BasicAssets\Scripts\Core\Simulation.cs" />
      <Compile Include="Assets\UTech\MG-Platformer\BasicAssets\Scripts\Core\Simulation.Event.cs" />
      <Compile Include="Assets\UTech\MG-Platformer\BasicAssets\Scripts\Core\Simulation.InstanceRegister.cs" />
