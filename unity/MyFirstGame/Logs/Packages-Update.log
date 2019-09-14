@@ -1,0 +1,11 @@
+
+=== Sat Sep 14 12:06:10 2019
+
+Packages were changed.
+Update Mode: mergeDefaultDependencies
+
+The following packages were added:
+  com.unity.analytics@3.2.2
+  com.unity.purchasing@2.0.3
+  com.unity.ads@2.0.8
+  com.unity.collab-proxy@1.2.15

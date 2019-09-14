@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f107dc6d4c984c45bdafd3bb15f98f0, type: 3}
+  m_Name: Walkthrough4
+  m_EditorClassIdentifier: 
+  m_WindowTitle: Walkthrough
+  m_TutorialTitle: Adding a Prefab
+  m_LessonId: 48245
+  m_Version: 0
+  m_Scene: {fileID: 102900000, guid: 2cda990e2423bbf4892e6590ba056729, type: 3}
+  m_DefaultSceneCameraSettings:
+    m_CameraMode: 0
+    m_FocusMode: 1
+    m_Orthographic: 0
+    m_Size: 0
+    m_Pivot: {x: 0, y: 0, z: 0}
+    m_Rotation: {x: 0, y: 0, z: 0, w: 0}
+    m_FrameObject:
+      m_SceneGuid: 2cda990e2423bbf4892e6590ba056729
+      m_GameObjectGuid: 2cedde77-9eec-414f-a172-5c4b3c8e2891
+      m_SerializedComponentType:
+        m_TypeName: 
+      m_ComponentIndex: 0
+      m_AssetObject: {fileID: 0}
+      m_Prefab: {fileID: 0}
+    m_Enabled: 1
+  m_ExitBehavior: 1
+  m_SkipTutorialBehavior: 0
+  m_AssetSelectedOnExit: {fileID: 11400000, guid: 2344aa35a56234042be19bcb6a963447,
+    type: 2}
+  m_WelcomePage: {fileID: 0}
+  m_CompletedPage: {fileID: 0}
+  IsWelcomingPageShowing: 1
+  IsCompletedPageShowing: 0
+  m_Pages:
+    m_Items:
+    - {fileID: 11400000, guid: a3c0acd3a97a8464ea283a617b2bb20c, type: 2}
+    - {fileID: 11400000, guid: 562e608e72f564fd587ac4e4e8323957, type: 2}
+    - {fileID: 11400000, guid: be261f07c71d3462bbf00524e82591ad, type: 2}
+    - {fileID: 11400000, guid: 925c9c088984d4481ba4151bb9eba820, type: 2}
+    - {fileID: 11400000, guid: fb1142c575fff4f0abbd81cfa7064e2c, type: 2}
+    - {fileID: 11400000, guid: 9e40b27755e7c417bb209bc003d8b464, type: 2}
+    - {fileID: 11400000, guid: 423bbef88c09e457caf11e626b5039fa, type: 2}
+    - {fileID: 11400000, guid: 426c2ecafb50d45939c113b173a202a3, type: 2}
+  m_WindowLayout: {fileID: 102900000, guid: 0678b6046a2eb495a9c845f833d07e59, type: 3}

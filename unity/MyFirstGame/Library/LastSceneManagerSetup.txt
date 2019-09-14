@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/UTech/MG-Platformer/BasicAssets/Scenes/SampleScene.unity
+  isLoaded: 1
+  isActive: 1
