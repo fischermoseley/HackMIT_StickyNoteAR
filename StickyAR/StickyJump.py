@@ -3,16 +3,41 @@ import random
 from settings import *
 from sprites import *
 
-DEFAULT_CV = [(100,100,50,50,"b")]
+DEFAULT_CV = [(150,200,50,50,"blue"), (275,200,50,50,"orange"), (375,200,50,50,"green"), (450,200,50,50,"pink")]
 class StickyJump:
-    def __init__(self, cv_data = DEFAULT_CV):
+    def __init__(self, cv_data):
+        if cv_data is None:
+            self.cv_data = DEFAULT_CV
+        else:
+            self.cv_ddata = cv_data
+            
         # initialize game window, etc
         pg.init()
         pg.mixer.init()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
+        self.platform_list = []
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
         self.running = True
+
+    def read_cv_data(self):
+        print(self.cv_data)
+        for sticky in self.cv_data:
+            plat = sticky[:-1]
+            print("PLAT")
+            print(*plat)
+
+            sticky_color = sticky[-1]
+            if sticky_color == "green":
+                p = WinSticky(*plat)
+            elif sticky_color == "blue":
+                p = WalkSticky(*plat)
+            elif sticky_color == "pink":
+                p = DieSticky(*plat)
+            elif sticky_color == "orange":
+                p = SpawnSticky(*plat)
+            self.all_sprites.add(p)
+            self.platforms.add(p) 
 
     def new(self):
         # start a new game
@@ -20,10 +45,11 @@ class StickyJump:
         self.platforms = pg.sprite.Group()
         self.player = Player(self)
         self.all_sprites.add(self.player)
-        for plat in PLATFORM_LIST:
-            p = Platform(*plat)
-            self.all_sprites.add(p)
-            self.platforms.add(p)
+        self.read_cv_data()
+        # for plat in PLATFORM_LIST:
+        #     p = Platform(*plat)
+        #     self.all_sprites.add(p)
+        #     self.platforms.add(p)
         self.run()
 
     def run(self):

@@ -21,10 +21,17 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
-BLUE = (0, 255, 255) #Cyan
+BLUE = (0, 255, 255)
 YELLOW = (255, 255, 0)
 LIGHTBLUE = (0, 155, 155)
 PINK = (255, 69, 178)
-ORANGE = (256, 165, 0)
+ORANGE = (255, 165, 0)
 
+# color_dict = {
+#     "blue": WalkSticky(Platform),
+#     "orange": SpawnSticky(Platform),
+#     "pink": DieSticky(Platform),
+#     "pink": PINK,
+#     "orange": ORANGE
+# }
 

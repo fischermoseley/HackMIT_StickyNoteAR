@@ -55,20 +55,20 @@ class Platform(pg.sprite.Sprite):
 
 class WalkSticky(Platform):
     def __init__(self, x, y, w, h):
-        super()
+        Platform.__init__(self, x, y, w, h)
         self.image.fill(BLUE)
 
 class SpawnSticky(Platform):
     def __init__(self, x, y, w, h):
-        super()
+        Platform.__init__(self, x, y, w, h)
         self.image.fill(ORANGE)
 
 class DieSticky(Platform):
     def __init__(self, x, y, w, h):
-        super()
+        Platform.__init__(self, x, y, w, h)
         self.image.fill(PINK)
         
 class WinSticky(Platform):
     def __init__(self, x, y, w, h):
-        super()
+        Platform.__init__(self, x, y, w, h)
         self.image.fill(GREEN)
