@@ -144,6 +144,36 @@ def clearSticky():
 	if(os.path.exists(state_image_path)):
 		os.remove(state_image_path)
 
+def reSticky():
+	clearSticky()
+	camera = cv.VideoCapture(1)
+	return_value, state_image = camera.read()
+	camera.release()
+	cv.imwrite(state_image_path, state_image)
+	
+	state_image = cv.imread("state/current_state.png")
+
+	calib_image = cv.imread("state/current_calib.png")
+	transform_matrix = genCalTransformMatrix(calib_image, red, 90, 80, grid_width, grid_height)
+
+	state_image_transformed = cv.warpPerspective(state_image, transform_matrix, (grid_width, grid_height))
+
+	bounding_box_coords, _ = lookForGreen(state_image_transformed, transform_matrix, grid_width, grid_height)
+	orange_coords, _ = lookForOrange(state_image_transformed, transform_matrix, grid_width, grid_height)
+	pink_coords, _ = lookForPink(state_image_transformed, transform_matrix, grid_width, grid_height)
+	blue_coords, _ = lookForBlue(state_image_transformed, transform_matrix, grid_width, grid_height)
+
+	for coord in orange_coords:
+		bounding_box_coords.append(coord)
+
+	for coord in pink_coords:
+		bounding_box_coords.append(coord)
+
+	for coord in blue_coords:
+		bounding_box_coords.append(coord)
+
+	return bounding_box_coords
+
 def updateSticky():
 	if(not os.path.exists(state_image_path)):
 		camera = cv.VideoCapture(1)
@@ -157,6 +187,7 @@ def updateSticky():
 	transform_matrix = genCalTransformMatrix(calib_image, red, 90, 80, grid_width, grid_height)
 
 	state_image_transformed = cv.warpPerspective(state_image, transform_matrix, (grid_width, grid_height))
+	cv.imwrite("state_image_transformed.png", state_image_transformed)
 
 	bounding_box_coords, _ = lookForGreen(state_image_transformed, transform_matrix, grid_width, grid_height)
 	orange_coords, _ = lookForOrange(state_image_transformed, transform_matrix, grid_width, grid_height)

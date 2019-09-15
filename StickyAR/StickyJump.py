@@ -2,7 +2,7 @@ import pygame as pg
 import time
 import random
 from settings import *
-# from stickys import updateSticky, clearSticky, calibrate, uncalibrate
+from stickys import updateSticky, clearSticky, calibrate, uncalibrate
 
 from sprites import *
 from time import sleep
@@ -59,9 +59,13 @@ class StickyJump:
                 
             self.all_sprites.add(p)
             
-    def new(self):
+    def new(self, resticky=False):
         """Start a new game"""
         #Define groups and subgroups of platforms
+        if resticky:
+            print("attempting to resticky")
+            self.cv_data = updateSticky()
+            print(self.cv_data)
         self.all_sprites = pg.sprite.Group()
         self.safeplatforms = pg.sprite.Group()
         self.spawnplatform = pg.sprite.GroupSingle()
@@ -123,7 +127,7 @@ class StickyJump:
 
     def resticky(self):
         print("restickying!")
-        self.new()
+        self.new(True)
 
         #extraneous for now
         delay = 250 # 500ms = 0.5s
