@@ -2,6 +2,9 @@ import pygame as pg
 import random
 from settings import *
 from sprites import *
+from time import sleep
+
+spawn_location = []
 
 DEFAULT_CV = [(150,200,50,50,"blue"), (275,200,50,50,"orange"), (375,200,50,50,"green"), (450,200,50,50,"pink")]
 class StickyJump:
@@ -14,11 +17,12 @@ class StickyJump:
         # initialize game window, etc
         pg.init()
         pg.mixer.init()
-        self.screen = pg.display.set_mode((WIDTH, HEIGHT))
-        self.platform_list = []
+        self.screen = pg.display.set_mode((WIDTH, HEIGHT), flags=pg.FULLSCREEN)
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
         self.running = True
+        self.xspawn = 0
+        self.yspawn = 0
 
     def read_cv_data(self):
         print(self.cv_data)
@@ -30,26 +34,33 @@ class StickyJump:
             sticky_color = sticky[-1]
             if sticky_color == "green":
                 p = WinSticky(*plat)
+                self.safeplatforms.add(p)
+                self.winplatform.add(p)
             elif sticky_color == "blue":
                 p = WalkSticky(*plat)
-            elif sticky_color == "pink":
-                p = DieSticky(*plat)
+                self.safeplatforms.add(p)
             elif sticky_color == "orange":
                 p = SpawnSticky(*plat)
+                self.safeplatforms.add(p)
+                self.spawnplatform.add(p)
+                spawn_location.append(p.rect.x)
+                spawn_location.append(p.rect.y)
+            elif sticky_color == "pink":
+                p = DieSticky(*plat)
+                self.deathplatforms.add(p)
+
             self.all_sprites.add(p)
-            self.platforms.add(p) 
 
     def new(self):
         # start a new game
         self.all_sprites = pg.sprite.Group()
-        self.platforms = pg.sprite.Group()
-        self.player = Player(self)
-        self.all_sprites.add(self.player)
+        self.safeplatforms = pg.sprite.Group()
+        self.spawnplatform = pg.sprite.GroupSingle()
+        self.winplatform = pg.sprite.GroupSingle()
+        self.deathplatforms = pg.sprite.Group()
+
         self.read_cv_data()
-        # for plat in PLATFORM_LIST:
-        #     p = Platform(*plat)
-        #     self.all_sprites.add(p)
-        #     self.platforms.add(p)
+        self.spawnplayer()
         self.run()
 
     def run(self):
@@ -66,10 +77,21 @@ class StickyJump:
         self.all_sprites.update()
         # check if player hits a platform - only if falling
         if self.player.vel.y > 0:
-            hits = pg.sprite.spritecollide(self.player, self.platforms, False)
+            hits = pg.sprite.spritecollide(self.player, self.safeplatforms, False)
             if hits:
                 self.player.pos.y = hits[0].rect.top
                 self.player.vel.y = 0
+            dead = pg.sprite.spritecollide(self.player, self.deathplatforms, False)
+            if dead:
+                self.player.kill()
+                self.player.remove()
+                sleep(0.5)
+                self.spawnplayer()
+    
+    def spawnplayer(self):
+        # Spawn in player at spawn sticky
+        self.player = Player(self, spawn_location[0], spawn_location[1])
+        self.all_sprites.add(self.player)
 
     def events(self):
         # Game Loop - events
