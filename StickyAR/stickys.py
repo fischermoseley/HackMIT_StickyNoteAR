@@ -170,6 +170,12 @@ def updateSticky():
         bounding_box_coords.append(coord)
 
 	for coord in pink_coords:
+<<<<<<< HEAD
+=======
+		bounding_box_coords.append(coord)
+
+	for coord in blue_coords:
+>>>>>>> parent of efdf015... Entered the Age of Augmented Reality
 		bounding_box_coords.append(coord)
 
     for coord in blue_coords:
