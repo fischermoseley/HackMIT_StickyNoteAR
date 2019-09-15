@@ -15,11 +15,12 @@ class StickyJump:
             self.cv_data = DEFAULT_CV
         else:
             self.cv_data = cv_data
-            
+        
+        self.cv_data.append((0, 768, 2048, 5,"pink"))
         # initialize game window, etc
         pg.init()
         pg.mixer.init()
-        self.screen = pg.display.set_mode((WIDTH, HEIGHT), flags=pg.FULLSCREEN)
+        self.screen = pg.display.set_mode((WIDTH, HEIGHT),flags=pg.FULLSCREEN)
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
         self.running = True
@@ -27,6 +28,7 @@ class StickyJump:
         self.yspawn = 0
 
     def read_cv_data(self):
+        """Reads Fischer's beautiful data"""
         print(self.cv_data)
         for sticky in self.cv_data:
             plat = sticky[:-1]
@@ -45,39 +47,47 @@ class StickyJump:
                 p = SpawnSticky(*plat)
                 self.safeplatforms.add(p)
                 self.spawnplatform.add(p)
-                spawn_location.append(p.rect.x)
-                spawn_location.append(p.rect.y)
+#                print("Spawnplatform:" + SpawnSticky(*plat).rect.x)
+                spawn_location.append(SpawnSticky(*plat).rect.x)
+                spawn_location.append(SpawnSticky(*plat).rect.y)
             elif sticky_color == "pink":
+                #If it's a death sticky, it belongs to a group reserved for death stickies.
                 p = DieSticky(*plat)
                 self.deathplatforms.add(p)
-
+                
             self.all_sprites.add(p)
-
+            
     def new(self):
-        # start a new game
+        """Start a new game"""
+        #Define groups and subgroups of platforms
         self.all_sprites = pg.sprite.Group()
         self.safeplatforms = pg.sprite.Group()
         self.spawnplatform = pg.sprite.GroupSingle()
         self.winplatform = pg.sprite.GroupSingle()
         self.deathplatforms = pg.sprite.Group()
-
+        
         self.read_cv_data()
         self.spawnplayer()
         self.run()
 
     def run(self):
-        # Game Loop
+        """Game Loop"""
+        
+        won = False
         self.playing = True
         while self.playing:
             self.clock.tick(FPS)
+            won = self.update()
+            if won: #Checks for win condition
+                self.events(True)
             self.events()
-            self.update()
             self.draw()
         if not self.playing:
             pg.QUIT()
 
+    
     def update(self):
-        # Game Loop - Update
+        """Game Loop - Update"""
         self.all_sprites.update()
         # check if player hits a platform - only if falling
         if self.player.vel.y > 0:
@@ -85,18 +95,24 @@ class StickyJump:
             if hits:
                 self.player.pos.y = hits[0].rect.top
                 self.player.vel.y = 0
-            dead = pg.sprite.spritecollide(self.player, self.deathplatforms, False)
+            win = pg.sprite.spritecollide(self.player, self.winplatform, False)
+            if win:
+                self.message_display('You Win!')
+                return True
+            dead = pg.sprite.spritecollide(self.player, self.deathplatforms, False) #Checks for collision with death platform
             if dead:
                 self.player.kill()
                 self.player.remove()
                 sleep(0.5)
                 self.spawnplayer()
-    
+        return False
+        
     def spawnplayer(self):
-        # Spawn in player at spawn sticky
+        """Spawn in Player at spawn sticky"""
         self.player = Player(self, spawn_location[0], spawn_location[1])
         self.all_sprites.add(self.player)
-
+        self.player.vel = vec(0, 0)
+        self.player.acc = vec(0, 0)
     def resticky(self):
         print("restickying!")
         self.new()
@@ -109,14 +125,20 @@ class StickyJump:
         show = True
 
 
-    def events(self):
-        # Game Loop - events
+    def events(self, won=False):
+        """Game Loop - events"""
         for event in pg.event.get():
             # check for closing window
-            if event.type == pg.QUIT:
-                if self.playing:
-                    self.playing = False
-                self.running = False
+            if won:
+                print("won!")
+                while not pg.K_BACKSPACE:
+                    pass
+                
+                self.new()
+#            if event.type == pg.QUIT:
+#                if self.playing:
+#                    self.playing = False
+#                self.running = False
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     if self.playing:
@@ -127,20 +149,31 @@ class StickyJump:
                 if event.key == pg.K_u:
                     self.resticky()
 
-
+                    
+    def text_objects(self, text, font):
+        textSurface = font.render(text, True, WHITE)
+        return textSurface, textSurface.get_rect()
+    
+    def message_display(self, text):
+        largeText = pg.font.Font('freesansbold.ttf',115)
+        TextSurf, TextRect = self.text_objects(text, largeText)
+        TextRect.center = ((WIDTH/2),(HEIGHT/2))
+        self.screen.blit(TextSurf, TextRect)
+        pg.display.update()
+        self.events(True)
 
     def draw(self):
-        # Game Loop - draw
+        """Game Loop - draw"""
         self.screen.fill(BLACK)
         self.all_sprites.draw(self.screen)
         # *after* drawing everything, flip the display
         pg.display.flip()
 
     def show_start_screen(self):
-        # game splash/start screen
+        """game splash/start screen"""
         pass
 
     def show_go_screen(self):
-        # game over/continue
+        """game over/continue"""
         pass
 
