@@ -17,6 +17,7 @@ pg.draw.rect(screen, (255,0,0), rect)
 pg.display.flip()
 
 #THORPY ELEMENTS
+# title_image = thorpy.make_image("n")
 quit_button = thorpy.make_button("Quit", func=thorpy.functions.quit_func)
 sticky_jump_button = thorpy.make_button("StickyJump", func=launch_game) # < -- eventually abstract more
 calibrate_button = thorpy.make_button("Calibrate", func=print("calibrating")) # <-- zach add calibration here
