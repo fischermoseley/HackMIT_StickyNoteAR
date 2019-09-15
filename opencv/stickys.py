@@ -16,11 +16,11 @@ green = np.array([73, 138, 125])
 pink = np.array([113, 60, 201])
 blue = np.array([195, 160, 126])
 
-grid_width = 400
-grid_height = 300
+grid_width = 800
+grid_height = 600
 
-calib_image_path = "state/current_calib.jpg"
-state_image_path = "state/current_state.jpg"
+calib_image_path = "opencv/state/current_calib.png"
+state_image_path = "opencv/state/current_state.png"
 
 def takePicture():
     camera = cv.VideoCapture(0)
