@@ -1,5 +1,5 @@
-import socket
 from pynput.keyboard import Key, Controller, Listener
+import socket
 
 
 UDP_IP_ADDRESS = "127.0.0.1"
