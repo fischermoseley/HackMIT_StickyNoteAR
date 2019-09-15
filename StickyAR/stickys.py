@@ -22,12 +22,6 @@ grid_height = 600
 calib_image_path = "state/current_calib.png"
 state_image_path = "state/current_state.png"
 
-def takePicture():
-    camera = cv.VideoCapture(0)
-    image = camera.read()
-    del(camera)
-    return image
-
 def maskByColor(image, color, lowTolerance, highTolerance):
 	lower = np.full((1,3), -lowTolerance)
 	upper = np.full((1,3), highTolerance)
@@ -107,16 +101,14 @@ def lookForColor(image, transform_matrix, color, colorName, lowTolerance, highTo
 	bounding_box_coords = []
 	for contour in contour_list:
 		x, y, w, h = cv.boundingRect(contour)
-		formatted_tuple = (x, y, w, h, colorName)
-		bounding_box_coords.append(formatted_tuple)
+		bounding_box_coords.append([x, y, w, h, colorName])
 
 		b, g, r = tuple(color)
 		b = int(b)
 		g = int(g)
 		r = int(r)
 		cv.rectangle(image_redrawn, (x,y), (x + w, y + h), (b, g, r), 2)
-	
-	return bounding_box_coords, image_redrawn.copy()
+	return bounding_box_coords
 				
 def lookForGreen(image, transform_matrix, grid_width, grid_height):
 	return lookForColor(image, transform_matrix, green, "green", 20, 25, grid_width, grid_height)
@@ -168,16 +160,20 @@ def updateSticky():
 	calib_image = cv.imread(calib_image_path)
 	transform_matrix = genCalTransformMatrix(calib_image, red, 90, 80, grid_width, grid_height)
 
-	bounding_box_coords = []
-	green_coords, _ = lookForGreen(state_image, transform_matrix, grid_width, grid_height)
-	orange_coords, _ = lookForOrange(state_image, transform_matrix, grid_width, grid_height)
-	pink_coords, _ = lookForPink(state_image, transform_matrix, grid_width, grid_height)
-	blue_coords, _ = lookForBlue(state_image, transform_matrix, grid_width, grid_height)
 
-	bounding_box_coords.append(green_coords)
-	bounding_box_coords.append(orange_coords)
-	bounding_box_coords.append(pink_coords)
-	bounding_box_coords.append(blue_coords)
+	bounding_box_coords = lookForGreen(state_image, transform_matrix, grid_width, grid_height)
+	orange_coords = lookForOrange(state_image, transform_matrix, grid_width, grid_height)
+	pink_coords = lookForPink(state_image, transform_matrix, grid_width, grid_height)
+	blue_coords = lookForBlue(state_image, transform_matrix, grid_width, grid_height)
+
+	for coord in orange_coords:
+		bounding_box_coords.append(coord)
+
+	for coord in pink_coords:
+		bounding_box_coords.append(coord)
+
+	for coord in blue_coords:
+		bounding_box_coords.append(coord)
 
 	return bounding_box_coords
 
