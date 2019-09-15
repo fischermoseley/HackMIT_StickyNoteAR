@@ -52,3 +52,23 @@ class Platform(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
+class WalkSticky(Platform):
+    def __init__(self, x, y, w, h):
+        super()
+        self.image.fill(BLUE)
+
+class SpawnSticky(Platform):
+    def __init__(self, x, y, w, h):
+        super()
+        self.image.fill(ORANGE)
+
+class DieSticky(Platform):
+    def __init__(self, x, y, w, h):
+        super()
+        self.image.fill(PINK)
+        
+class WinSticky(Platform):
+    def __init__(self, x, y, w, h):
+        super()
+        self.image.fill(GREEN)
