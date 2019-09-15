@@ -1,6 +1,6 @@
 from cmd import Cmd
 from stickys import updateSticky, clearSticky, calibrate, uncalibrate
-from .StickyAR.launch_game import launch_game
+from launch_game import launch_game
 
 
 class MyPrompt(Cmd):
