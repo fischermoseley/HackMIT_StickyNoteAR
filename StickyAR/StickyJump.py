@@ -9,7 +9,7 @@ class StickyJump:
         if cv_data is None:
             self.cv_data = DEFAULT_CV
         else:
-            self.cv_data = cv_data
+            self.cv_ddata = cv_data
             
         # initialize game window, etc
         pg.init()
