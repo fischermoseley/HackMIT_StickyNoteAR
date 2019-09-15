@@ -2,7 +2,7 @@ from StickyJump import *
 from settings import *
 from sprites import *
 
-def launch_game(cv_data):
+def launch_game(cv_data=None):
     print("launching game")
     g = StickyJump(cv_data)
     g.show_start_screen()
