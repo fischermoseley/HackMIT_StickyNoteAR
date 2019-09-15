@@ -10,7 +10,8 @@ from scipy.spatial import distance as dist
 white = np.array([255, 255, 255])
 red = np.array([81, 110, 214])
 orange = np.array([50, 172, 244])
-yellow = np.array([80, 227, 239]) 
+yellow = np.array([80, 227, 239])
+green = np.array([73, 138, 125])
 pink = np.array([170, 143, 237])
 blue = np.array([202, 198, 117])
 
@@ -30,6 +31,19 @@ def generatePoints(image, color, lowTolerance, highTolerance):
     peri = cv.arcLength(cnts[0], True)
     approx = cv.approxPolyDP(cnts[0], 0.04 * peri, True)
     return approx
+
+def generateSortedContourList(shapeMask, minContourArea):
+	#takes the list of contours that we generated, and filters out the ones that don't have enough area
+	unfiltered_contour_list, _ = cv.findContours(shapeMask.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+	filtered_contour_list = []
+
+	for contour in unfiltered_contour_list:
+		area = cv.contourArea(contour)
+		if area >= minContourArea: filtered_contour_list.append(contour)
+
+	return filtered_contour_list
+		
+		
 
 def order_points(pts):
 	# sort the points based on their x-coordinates
@@ -78,6 +92,28 @@ transform_matrix = generateCalibrationTransformMatrix(calImage, red, 90, 35, gri
 image = cv.imread("training/green.jpg")
 image_transformed = cv.warpPerspective(image, transform_matrix, (grid_width, grid_height))
 
+greenMask = maskByColor(image_transformed, green, 20, 25)
+cv.imshow("greenMask", greenMask)
+contour_list = generateSortedContourList(greenMask, 100)
+print(len(contour_list))
+
+image_transformed_painted = image_transformed.copy()
+
+bounding_box_coords = []
+for contour in contour_list:
+	color = "green"
+	x, y, w, h = cv.boundingRect(contour)
+	formatted_tuple = (x, y, w, h, color)
+
+	cv.rectangle(image_transformed_painted,(x,y),(x+w,y+h),(0,255,0),3)
+	bounding_box_coords.append(formatted_tuple)
+
+
+
+print(bounding_box_coords)
+	
+
+cv.imshow("image_transformed_painted", image_transformed_painted)
 
 plt.subplot(121),plt.imshow(image),plt.title('image')
 plt.subplot(122),plt.imshow(image_transformed),plt.title('image_transformed')
