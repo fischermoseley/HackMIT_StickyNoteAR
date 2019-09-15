@@ -1,6 +1,8 @@
 import pygame as pg
 import random
 from settings import *
+# from stickys import updateSticky, clearSticky, calibrate, uncalibrate
+
 from sprites import *
 from time import sleep
 
@@ -71,6 +73,8 @@ class StickyJump:
             self.events()
             self.update()
             self.draw()
+        if not self.playing:
+            pg.QUIT()
 
     def update(self):
         # Game Loop - Update
@@ -93,6 +97,18 @@ class StickyJump:
         self.player = Player(self, spawn_location[0], spawn_location[1])
         self.all_sprites.add(self.player)
 
+    def resticky(self):
+        print("restickying!")
+        self.new()
+
+        #extraneous for now
+        delay = 250 # 500ms = 0.5s
+
+        current_time = pg.time.get_ticks()
+        change_time = current_time + delay
+        show = True
+
+
     def events(self):
         # Game Loop - events
         for event in pg.event.get():
@@ -108,6 +124,10 @@ class StickyJump:
                     self.running = False
                 if event.key == pg.K_SPACE:
                     self.player.jump()
+                if event.key == pg.K_u:
+                    self.resticky()
+
+
 
     def draw(self):
         # Game Loop - draw
