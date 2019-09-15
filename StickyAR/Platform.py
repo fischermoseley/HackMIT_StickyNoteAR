@@ -1,7 +1,7 @@
 import pygame as pg 
 import thorpy
 from StickyJump import *
-from launch_game import *
+# from stickys import updateSticky, clearSticky, calibrate, uncalibrate
 from settings import *
 
 # pg.init()
@@ -45,6 +45,18 @@ from settings import *
 
 # pg.quit()
 
+def init_game():
+    #currentState = updateSticky()
+    currentState = None
+    print("attempt at retrieving currentState")
+    print(currentState)
+    print("launching game")
+    g = StickyJump(currentState)
+    g.show_start_screen()
+    while g.running:
+        g.new()
+        g.show_go_screen()
+
 if __name__ == "__main__":
     app = thorpy.Application((WIDTH,HEIGHT))
     thorpy.set_theme("human")
@@ -62,7 +74,7 @@ if __name__ == "__main__":
     quit_image = "Credits.png"
     quit_image_hover = "CreditsHover.png"
     e_play = thorpy.make_image_button(sticky_jump_image,sticky_jump_image_hover,sticky_jump_image_hover)
-    e_play.user_func = play
+    e_play.user_func = init_game
     e_play_2 = thorpy.make_image_button(sticky_jam_image,sticky_jam_image,sticky_jam_image)
     e_quit = thorpy.make_image_button(quit_image,quit_image_hover,quit_image_hover)
     e_quit.user_func = thorpy.functions.quit_menu_func

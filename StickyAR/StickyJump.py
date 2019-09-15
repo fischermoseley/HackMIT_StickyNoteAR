@@ -1,6 +1,9 @@
 import pygame as pg
+import time
 import random
 from settings import *
+# from stickys import updateSticky, clearSticky, calibrate, uncalibrate
+
 from sprites import *
 from time import sleep
 
@@ -24,6 +27,7 @@ class StickyJump:
         self.running = True
         self.xspawn = 0
         self.yspawn = 0
+        self.win_state = False
 
     def read_cv_data(self):
         """Reads Fischer's beautiful data"""
@@ -63,7 +67,7 @@ class StickyJump:
         self.spawnplatform = pg.sprite.GroupSingle()
         self.winplatform = pg.sprite.GroupSingle()
         self.deathplatforms = pg.sprite.Group()
-        
+        self.win_state = False
         self.read_cv_data()
         self.spawnplayer()
         self.run()
@@ -80,21 +84,28 @@ class StickyJump:
                 self.events(True)
             self.events()
             self.draw()
+        if not self.playing:
+            pg.QUIT()
 
-    
+    def win_condition(self):
+        self.message_display('You Win!')
+        time.sleep(1.25)
+        self.new()
+
     def update(self):
         """Game Loop - Update"""
         self.all_sprites.update()
         # check if player hits a platform - only if falling
+        if self.win_state:
+            self.message_display('You Win!')
+            self.win_condition()
         if self.player.vel.y > 0:
             hits = pg.sprite.spritecollide(self.player, self.safeplatforms, False)
             if hits:
                 self.player.pos.y = hits[0].rect.top
                 self.player.vel.y = 0
-            win = pg.sprite.spritecollide(self.player, self.winplatform, False)
-            if win:
-                self.message_display('You Win!')
-                return True
+            if pg.sprite.spritecollide(self.player, self.winplatform, False):
+                self.win_state = True
             dead = pg.sprite.spritecollide(self.player, self.deathplatforms, False) #Checks for collision with death platform
             if dead:
                 self.player.kill()
@@ -109,6 +120,18 @@ class StickyJump:
         self.all_sprites.add(self.player)
         self.player.vel = vec(0, 0)
         self.player.acc = vec(0, 0)
+
+    def resticky(self):
+        print("restickying!")
+        self.new()
+
+        #extraneous for now
+        delay = 250 # 500ms = 0.5s
+
+        current_time = pg.time.get_ticks()
+        change_time = current_time + delay
+        show = True
+
 
     def events(self, won=False):
         """Game Loop - events"""
@@ -131,6 +154,9 @@ class StickyJump:
                     self.running = False
                 if event.key == pg.K_SPACE:
                     self.player.jump()
+                if event.key == pg.K_u:
+                    self.resticky()
+
                     
     def text_objects(self, text, font):
         textSurface = font.render(text, True, WHITE)
