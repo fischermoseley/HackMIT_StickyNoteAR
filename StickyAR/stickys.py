@@ -94,7 +94,6 @@ def genCalTransformMatrix(image, color, lowTolerance, highTolerance, width, heig
     return transform_matrix
 
 def lookForColor(image, transform_matrix, color, colorName, lowTolerance, highTolerance, grid_width, grid_height):
-    image_redrawn = image.copy()
 	color_mask = maskByColor(image, color, lowTolerance, highTolerance)
 	contour_list = generateFilteredContourList(color_mask, 100) #the 100 is the general size of the sticky note, but this number is largely emperical
 	image_redrawn = image.copy()
