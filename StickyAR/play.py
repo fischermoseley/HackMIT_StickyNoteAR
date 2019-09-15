@@ -8,23 +8,25 @@ class MyPrompt(Cmd):
     intro = "Welcome to StickyAR! Type H to list commands"
 
     def do_h(self, inp):
-        print("Click P to Enter the Game\n")
-        print("Click U to Calibrate the Screen\n")
+        print("Click P to Enter the Game")
+        print("Click U to Calibrate the Screen")
         print("Click S to Update Stickies")
-        print("Click Q to Quit the Game\n")
+        print("Click Q to Quit the Game")
 
     def do_p(self, inp):
-        print("Entering the Game")  
-        launch_game()
+        print("Entering the Game")
+        currentState = updateSticky()
+        print(currentState)
+        launch_game(currentState)
 
     def do_u(self, inp):
         print("Calibrating screen...")
-        # calibrate() # <--- Place calibration function here, Zach
+        calibrate()
         print("Screen Calibrated")
     
     def do_s(self, inp):
         print("Updating Sticky Note Locations...")
-        # calibrate() # <--- Place calibration function here, Zach
+        updateSticky()
         print("Stickies Updated")
 
     def do_q(self, inp):
