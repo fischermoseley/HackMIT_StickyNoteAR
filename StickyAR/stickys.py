@@ -94,24 +94,7 @@ def genCalTransformMatrix(image, color, lowTolerance, highTolerance, width, heig
     return transform_matrix
 
 def lookForColor(image, transform_matrix, color, colorName, lowTolerance, highTolerance, grid_width, grid_height):
-<<<<<<< HEAD
-    color_mask = maskByColor(image, color, lowTolerance, highTolerance)
-    contour_list = generateFilteredContourList(color_mask, 100) #the 100 is the general size of the sticky note, but this number is largely emperical
     image_redrawn = image.copy()
-
-    bounding_box_coords = []
-    for contour in contour_list:
-        x, y, w, h = cv.boundingRect(contour)
-        bounding_box_coords.append([x, y, w, h, colorName])
-
-        b, g, r = tuple(color)
-        b = int(b)
-        g = int(g)
-        r = int(r)
-        cv.rectangle(image_redrawn, (x,y), (x + w, y + h), (b, g, r), 2)
-    return bounding_box_coords, image_redrawn
-                
-=======
 	color_mask = maskByColor(image, color, lowTolerance, highTolerance)
 	contour_list = generateFilteredContourList(color_mask, 100) #the 100 is the general size of the sticky note, but this number is largely emperical
 	image_redrawn = image.copy()
@@ -128,7 +111,6 @@ def lookForColor(image, transform_matrix, color, colorName, lowTolerance, highTo
 		cv.rectangle(image_redrawn, (x,y), (x + w, y + h), (b, g, r), 2)
 	return bounding_box_coords
 				
->>>>>>> parent of efdf015... Entered the Age of Augmented Reality
 def lookForGreen(image, transform_matrix, grid_width, grid_height):
     return lookForColor(image, transform_matrix, green, "green", 20, 25, grid_width, grid_height)
 
@@ -139,11 +121,7 @@ def lookForPink(image, transform_matrix, grid_width, grid_height):
     return lookForColor(image, transform_matrix, pink, "pink", 40, 45, grid_width, grid_height)
 
 def lookForBlue(image, transform_matrix, grid_width, grid_height):
-<<<<<<< HEAD
-    return lookForColor(image, transform_matrix, blue, "blue", 30, 35, grid_width, grid_height)
-=======
 	return lookForColor(image, transform_matrix, blue, "blue", 35, 40, grid_width, grid_height)
->>>>>>> parent of efdf015... Entered the Age of Augmented Reality
 
 def uncalibrate():
     #if there already exists some calibration then we'll delete it
@@ -172,25 +150,6 @@ def clearSticky():
     return False
 
 def updateSticky():
-<<<<<<< HEAD
-    #if(not os.path.exists(state_image_path)):
-    camera = cv.VideoCapture(1)
-    retval, frame = camera.read()
-    cv.imwrite(state_image_path, frame)
-    camera.release()
-    
-    state_image = cv.imread("state/current_state.png")
-
-    calib_image = cv.imread("state/current_calib.png")
-    transform_matrix = genCalTransformMatrix(calib_image, red, 90, 80, grid_width, grid_height)
-
-    state_image_transformed = cv.warpPerspective(state_image, transform_matrix, (grid_width, grid_height))
-
-    bounding_box_coords, _ = lookForGreen(state_image_transformed, transform_matrix, grid_width, grid_height)
-    orange_coords, _ = lookForOrange(state_image_transformed, transform_matrix, grid_width, grid_height)
-    pink_coords, _ = lookForPink(state_image_transformed, transform_matrix, grid_width, grid_height)
-    blue_coords, _ = lookForBlue(state_image_transformed, transform_matrix, grid_width, grid_height)
-=======
 	if(not os.path.exists(state_image_path)):
 		camera = cv.VideoCapture(0)
 		_, state_image = camera.read()
@@ -207,18 +166,12 @@ def updateSticky():
 	orange_coords = lookForOrange(state_image, transform_matrix, grid_width, grid_height)
 	pink_coords = lookForPink(state_image, transform_matrix, grid_width, grid_height)
 	blue_coords = lookForBlue(state_image, transform_matrix, grid_width, grid_height)
->>>>>>> parent of efdf015... Entered the Age of Augmented Reality
 
     for coord in orange_coords:
         bounding_box_coords.append(coord)
 
-<<<<<<< HEAD
-    #for coord in pink_coords:
-        #bounding_box_coords.append(coord)
-=======
 	for coord in pink_coords:
 		bounding_box_coords.append(coord)
->>>>>>> parent of efdf015... Entered the Age of Augmented Reality
 
     for coord in blue_coords:
         bounding_box_coords.append(coord)
