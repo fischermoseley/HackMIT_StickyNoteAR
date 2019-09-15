@@ -1,2 +1,0 @@
-from boundingBox import calibrateFromCamera
-calibrateFromCamera()
