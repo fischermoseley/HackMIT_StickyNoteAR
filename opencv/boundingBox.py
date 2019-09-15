@@ -5,33 +5,47 @@ import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy.spatial import distance as dist
+import os
 
 #define the colors of the sticky notes, formatted as BGR (not RGB!)
 white = np.array([255, 255, 255])
-orange = np.array([50, 130, 183])
-green = np.array([73, 138, 125])
-pink = np.array([170, 143, 237])
-blue = np.array([202, 198, 117])
 red = np.array([81, 110, 214])
 
-def maskByColor(image, color, lowTolerance, highTolerance):
-    lower = np.full((1,3), -lowTolerance)
-    upper = np.full((1,3), highTolerance)
+orange = np.array([50, 130, 183])
+green = np.array([73, 138, 125])
+pink = np.array([113, 60, 201])
+blue = np.array([195, 160, 126])
 
-    lower_mask = np.add(color, lower)
-    upper_mask = np.add(color, upper)
-    shapeMask = cv.inRange(image, lower_mask, upper_mask)
-    return shapeMask
+def takePicture():
+    camera = cv.VideoCapture(0)
+    image = camera.read()
+    del(camera)
+    return image
+
+def maskByColor(image, color, lowTolerance, highTolerance):
+	lower = np.full((1,3), -lowTolerance)
+	upper = np.full((1,3), highTolerance)
+
+	lower_mask = np.add(color, lower)
+	upper_mask = np.add(color, upper)
+	shapeMask = cv.inRange(image, lower_mask, upper_mask)
+	return shapeMask
 
 def generatePoints(image, color, lowTolerance, highTolerance):
-    shapeMask = maskByColor(image, color, lowTolerance, highTolerance)
-    cnts, _ = cv.findContours(shapeMask.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+	shapeMask = maskByColor(image, color, lowTolerance, highTolerance)
+	contours, _ = cv.findContours(shapeMask.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 
-    peri = cv.arcLength(cnts[0], True)
-    approx = cv.approxPolyDP(cnts[0], 0.04 * peri, True)
-    return approx
+	#find the largest contour and use that one!
+	largest_contour = contours[0]
+	for contour in contours:
+		if cv.contourArea(contour) > cv.contourArea(largest_contour):
+			largest_contour = contour
 
-def generateSortedContourList(shapeMask, minContourArea):
+	peri = cv.arcLength(largest_contour, True)
+	approx = cv.approxPolyDP(largest_contour, 0.04 * peri, True)
+	return approx
+
+def generateFilteredContourList(shapeMask, minContourArea):
 	#takes the list of contours that we generated, and filters out the ones that don't have enough area
 	unfiltered_contour_list, _ = cv.findContours(shapeMask.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 	filtered_contour_list = []
@@ -70,18 +84,18 @@ def order_points(pts):
 	return np.array([tl, tr, br, bl], dtype="float32")
 
 def genCalTransformMatrix(image, color, lowTolerance, highTolerance, width, height):
-    approx = generatePoints(image, color, lowTolerance, highTolerance)
-    approx_trimmed = np.float32([x[0] for x in approx])
+	approx = generatePoints(image, color, lowTolerance, highTolerance)
+	approx_trimmed = np.float32([x[0] for x in approx])
 
-    pts1 = order_points(approx_trimmed)
-    pts2 = np.float32([[0,0],[width,0],[width,height],[0,height]])
+	pts1 = order_points(approx_trimmed)
+	pts2 = np.float32([[0,0],[width,0],[width,height],[0,height]])
 
-    transform_matrix = cv.getPerspectiveTransform(pts1, pts2)
-    return transform_matrix
+	transform_matrix = cv.getPerspectiveTransform(pts1, pts2)
+	return transform_matrix
 
 def lookForColor(image, transform_matrix, color, colorName, lowTolerance, highTolerance, grid_width, grid_height):
 	color_mask = maskByColor(image, color, lowTolerance, highTolerance)
-	contour_list = generateSortedContourList(color_mask, 100) #the 100 is the general size of the sticky note, but this number is largely emperical
+	contour_list = generateFilteredContourList(color_mask, 100) #the 100 is the general size of the sticky note, but this number is largely emperical
 	image_redrawn = image.copy()
 
 	bounding_box_coords = []
@@ -94,8 +108,7 @@ def lookForColor(image, transform_matrix, color, colorName, lowTolerance, highTo
 		b = int(b)
 		g = int(g)
 		r = int(r)
-		print(type(b))
-		cv.rectangle(image_redrawn, (x,y), (x + w, y + h), (b, g, r), 3)
+		cv.rectangle(image_redrawn, (x,y), (x + w, y + h), (b, g, r), 2)
 	
 	return bounding_box_coords, image_redrawn.copy()
 				
@@ -106,20 +119,57 @@ def lookForOrange(image, transform_matrix, grid_width, grid_height):
 	return lookForColor(image, transform_matrix, orange, "orange", 20, 25, grid_width, grid_height)
 
 def lookForPink(image, transform_matrix, grid_width, grid_height):
-	return lookForColor(image, transform_matrix, pink, "pink", 20, 25, grid_width, grid_height)
+	return lookForColor(image, transform_matrix, pink, "pink", 40, 45, grid_width, grid_height)
 
 def lookForBlue(image, transform_matrix, grid_width, grid_height):
-	return lookForColor(image, transform_matrix, blue, "blue", 20, 25, grid_width, grid_height)
+	return lookForColor(image, transform_matrix, blue, "blue", 35, 40, grid_width, grid_height)
 
-calImage = cv.imread("training/calibration.jpg")
+def calibrateFromCamera():
+	camera = cv2.VideoCapture(1)
+	image = camera.read()
+	del(camera)
+
+	if(os.path.exists("currentCalib.jpg")):
+		os.remove("currentCalib.jpg")
+	cv.imwrite("currentCalib.jpg", image)
+
+	return genCalTransformMatrix(image, red, 90, 80, grid_width, grid_height)
+
+def updateFromCamera():
+	camera = cv2.VideoCapture(1)
+	image = camera.read()
+	del(camera)
+
+	if(os.path.exists("currentBoard.jpg")):
+		os.remove("currentBoard.jpg")
+	cv.imwrite("currentBoard.jpg", image)
+
+	bounding_box_coords = []
+	green_coords, green_painted = lookForGreen(image, transform_matrix, grid_width, grid_height)
+	orange_coords, orange_painted = lookForOrange(image, transform_matrix, grid_width, grid_height)
+	pink_coords, pink_painted = lookForPink(image, transform_matrix, grid_width, grid_height)
+	blue_coords, blue_painted = lookForBlue(image, transform_matrix, grid_width, grid_height)
+
+	bounding_box_coords.append(green_coords)
+	bounding_box_coords.append(orange_coords)
+	bounding_box_coords.append(pink_coords)
+	bounding_box_coords.append(blue_coords)
+	print(bounding_box_coords)
+
+
+cal_image = cv.imread("training/redCalibration2.jpg")
+cal_mask = maskByColor(cal_image, red, 90, 80)
+
+cv.imshow("calib", cal_mask)
+cv.waitKey()
+
 grid_width = 400
 grid_height = 300
-transform_matrix = genCalTransformMatrix(calImage, red, 90, 35, grid_width, grid_height)
+transform_matrix = genCalTransformMatrix(cal_image, red, 90, 80, grid_width, grid_height)
 
 #generate transformed image
-image = cv.imread("training/green.jpg")
+image = cv.imread("training/sticky2.jpg")
 image_transformed = cv.warpPerspective(image, transform_matrix, (grid_width, grid_height))
-
 
 
 bounding_box_coords = []
