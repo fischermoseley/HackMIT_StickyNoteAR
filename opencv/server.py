@@ -4,36 +4,41 @@ localIP     = "127.0.0.1"
 localPort   = 6150
 bufferSize  = 1024
 
-connection = False
+def run_server():
+    # Create a datagram socket
+    SOCK = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-# Create a datagram socket
-SOCK = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    # Bind to address and ip
+    SOCK.bind((localIP, localPort))
 
-# Bind to address and ip
-SOCK.bind((localIP, localPort))
+    SOCK.sendto(("connecting").encode(), (localIP, localPort))
 
-SOCK.sendto(("connecting").encode())
+    # Listen for incoming datagrams
+    try:
+        while True:
+            bytesAddressPair = SOCK.recvfrom(bufferSize)
 
-# Listen for incoming datagrams
-while True:
-    bytesAddressPair = SOCK.recvfrom(bufferSize)
+            message = bytesAddressPair[0]
+            print(message)
+            translate = "{}".format(message)
+            
+            if(translate=='hello'):
+                SOCK.sendto(("Connected").encode())
 
-    message = bytesAddressPair[0]
+            elif(translate=='calibrate'):
+                SOCK.sendto(("I'm calibrating").encode())
 
-    translate = "{}".format(message)
+            elif(translate=='sticky'):
+                #write the call function to fischers code
+                #bytesToSend = ""
+                # Sending a reply to client
+                SOCK.sendto(("P180090234144").encode())
+    except KeyboardInterrupt:
+        print("terminating server")
 
-    if(translate=='hello'):
-        SOCK.sendto(("Connected").encode())
-        connection = True
 
-    elif(translate=='calibrate' and connection):
-        SOCK.sendto(("I'm calibrating").encode())
-
-    elif(translate=='sticky' and connection):
-        #write the call function to fischers code
-        #bytesToSend = ""
-        # Sending a reply to client
-        SOCK.sendto(("P180090234144").encode())
+if __name__ == "__main__":
+    run_server()
 
     
     

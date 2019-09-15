@@ -5,6 +5,11 @@ using Platformer.Gameplay;
 using static Platformer.Core.Simulation;
 using Platformer.Model;
 using Platformer.Core;
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
 
 namespace Platformer.Mechanics
 {
@@ -18,6 +23,13 @@ namespace Platformer.Mechanics
         public AudioClip respawnAudio;
         public AudioClip ouchAudio;
 
+
+        // Test UDP shit
+        Thread receiveThread;
+        UdpClient client;
+        int port;
+        bool remoteJump;
+        
         /// <summary>
         /// Max horizontal speed of the player.
         /// </summary>
@@ -44,6 +56,11 @@ namespace Platformer.Mechanics
 
         void Awake()
         {
+            //UDP
+            port = 6150;
+            remoteJump = false;
+            // InitUDP();
+
             health = GetComponent<Health>();
             audioSource = GetComponent<AudioSource>();
             collider2d = GetComponent<Collider2D>();
@@ -51,12 +68,57 @@ namespace Platformer.Mechanics
             animator = GetComponent<Animator>();
         }
 
+        //UDP
+        private void InitUDP()
+        {
+            print("UDP initialized");
+            receiveThread = new Thread (new ThreadStart(ReceiveData));
+            receiveThread.IsBackground = true; 
+            receiveThread.Start ();
+
+        }
+
+        private void ReceiveData()
+        {
+            client = new UdpClient (port);
+            while (true)
+            {
+                try
+                {
+                    IPEndPoint anyIP = new IPEndPoint(IPAddress.Parse("0.0.0.0"), port);
+                    byte[] data = client.Receive(ref anyIP);
+
+                    string text = Encoding.UTF8.GetString(data);
+                    print (">> " + text);
+
+                    remoteJump = true;
+
+                } catch(Exception e)
+                {
+                    print (e.ToString());
+                }
+            }
+        }
+
+        // private void  (string data)
+        // {
+        //     try
+        //     {
+        //         byte[] data = Encoding.UTF8.GetBytes(message);
+                
+
+        //     } catch(Exception e)
+        //     {
+        //         print(e.ToString());
+        //     }
+        // }
+
         protected override void Update()
         {
             if (controlEnabled)
             {
                 move.x = Input.GetAxis("Horizontal");
-                if (jumpState == JumpState.Grounded && Input.GetButtonDown("Jump"))
+                if (jumpState == JumpState.Grounded && Input.GetButtonDown("Jump") || remoteJump)
                     jumpState = JumpState.PrepareToJump;
                 else if (Input.GetButtonUp("Jump"))
                 {
@@ -75,6 +137,7 @@ namespace Platformer.Mechanics
         void UpdateJumpState()
         {
             jump = false;
+            remoteJump = false;
             switch (jumpState)
             {
                 case JumpState.PrepareToJump:
