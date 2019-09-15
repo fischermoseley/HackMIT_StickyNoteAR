@@ -1,16 +1,8 @@
 import pygame as pg 
 import thorpy
 from StickyJump import *
+from launch_game import *
 from settings import *
-
-def launch_game():
-    print("launching game")
-    g = StickyJump() #eventually extend out
-    g.show_start_screen()
-    while g.running:
-        g.new()
-        g.show_go_screen()
-    # pg.quit()
 
 pg.init()
 pg.key.set_repeat(300, 30)
@@ -44,7 +36,7 @@ box.update()
 
 playing_game = True
 while playing_game:
-    clock.tick(10)
+    clock.tick(1)
     for event in pg.event.get():
         if event.type == pg.QUIT:
             playing_game = False

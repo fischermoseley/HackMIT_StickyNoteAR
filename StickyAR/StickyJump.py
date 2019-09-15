@@ -3,8 +3,9 @@ import random
 from settings import *
 from sprites import *
 
+DEFAULT_CV = [(100,100,50,50,"b")]
 class StickyJump:
-    def __init__(self):
+    def __init__(self, cv_data = DEFAULT_CV):
         # initialize game window, etc
         pg.init()
         pg.mixer.init()
