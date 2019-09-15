@@ -16,6 +16,12 @@ green = np.array([73, 138, 125])
 pink = np.array([113, 60, 201])
 blue = np.array([195, 160, 126])
 
+grid_width = 400
+grid_height = 300
+
+calib_image_path = "state/current_calib.jpg"
+state_image_path = "state/current_state.jpg"
+
 def takePicture():
     camera = cv.VideoCapture(0)
     image = camera.read()
@@ -124,40 +130,60 @@ def lookForPink(image, transform_matrix, grid_width, grid_height):
 def lookForBlue(image, transform_matrix, grid_width, grid_height):
 	return lookForColor(image, transform_matrix, blue, "blue", 35, 40, grid_width, grid_height)
 
-def calibrateFromCamera():
-	camera = cv2.VideoCapture(1)
-	image = camera.read()
+def uncalibrate():
+	#if there already exists some calibration then we'll delete it
+	if(os.path.exists(calib_image_path)):
+		os.remove(calib_image_path)
+		return True
+	return False
+	
+
+def calibrate():
+	#if there already exists some calibration then we're just going to nope on out of here
+	if(os.path.exists(calib_image_path)): return False
+
+	camera = cv.VideoCapture(1)
+	calib_image = camera.read()
 	del(camera)
+	cv.imwrite(calib_image_path, calib_image)
 
-	if(os.path.exists("currentCalib.jpg")):
-		os.remove("currentCalib.jpg")
-	cv.imwrite("currentCalib.jpg", image)
+	return genCalTransformMatrix(calib_image, red, 90, 80, grid_width, grid_height)
 
-	return genCalTransformMatrix(image, red, 90, 80, grid_width, grid_height)
+def clearSticky():
+	#if there already exists some state then we'll delete it
+	if(os.path.exists(state_image_path)):
+		os.remove(state_image_path)
+		return True
+	return False
 
-def updateFromCamera():
-	camera = cv2.VideoCapture(1)
-	image = camera.read()
-	del(camera)
+def updateSticky():
+	if(not os.path.exists(state_image_path)):
+		camera = cv.VideoCapture(0)
+		_, state_image = camera.read()
+		camera.release()
+		cv.imwrite(state_image_path, state_image)
+	
+	state_image = cv.imread(state_image_path)
 
-	if(os.path.exists("currentBoard.jpg")):
-		os.remove("currentBoard.jpg")
-	cv.imwrite("currentBoard.jpg", image)
+	calib_image = cv.imread(calib_image_path)
+	transform_matrix = genCalTransformMatrix(calib_image, red, 90, 80, grid_width, grid_height)
 
 	bounding_box_coords = []
-	green_coords, green_painted = lookForGreen(image, transform_matrix, grid_width, grid_height)
-	orange_coords, orange_painted = lookForOrange(image, transform_matrix, grid_width, grid_height)
-	pink_coords, pink_painted = lookForPink(image, transform_matrix, grid_width, grid_height)
-	blue_coords, blue_painted = lookForBlue(image, transform_matrix, grid_width, grid_height)
+	green_coords, _ = lookForGreen(state_image, transform_matrix, grid_width, grid_height)
+	orange_coords, _ = lookForOrange(state_image, transform_matrix, grid_width, grid_height)
+	pink_coords, _ = lookForPink(state_image, transform_matrix, grid_width, grid_height)
+	blue_coords, _ = lookForBlue(state_image, transform_matrix, grid_width, grid_height)
 
 	bounding_box_coords.append(green_coords)
 	bounding_box_coords.append(orange_coords)
 	bounding_box_coords.append(pink_coords)
 	bounding_box_coords.append(blue_coords)
-	print(bounding_box_coords)
 
+	return bounding_box_coords
 
-cal_image = cv.imread("training/redCalibration2.jpg")
+print(updateSticky())
+
+""" cal_image = cv.imread("training/redCalibration2.jpg")
 cal_mask = maskByColor(cal_image, red, 90, 80)
 
 cv.imshow("calib", cal_mask)
@@ -192,4 +218,4 @@ cv.imshow("blue", blue_painted)
 
 plt.subplot(121),plt.imshow(image),plt.title('image')
 plt.subplot(122),plt.imshow(image_transformed),plt.title('image_transformed')
-plt.show()
+plt.show() """
