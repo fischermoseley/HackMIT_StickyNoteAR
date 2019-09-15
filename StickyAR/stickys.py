@@ -19,8 +19,8 @@ blue = np.array([195, 160, 126])
 grid_width = 800
 grid_height = 600
 
-calib_image_path = "opencv/state/current_calib.png"
-state_image_path = "opencv/state/current_state.png"
+calib_image_path = "state/current_calib.png"
+state_image_path = "state/current_state.png"
 
 def takePicture():
     camera = cv.VideoCapture(0)
