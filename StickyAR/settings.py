@@ -1,7 +1,7 @@
 # game options/settings
 TITLE = "StickyJUMP"
-WIDTH = 600    
-HEIGHT = 400
+WIDTH = 1024  
+HEIGHT = 768
 FPS = 60
 
 # Player properties
