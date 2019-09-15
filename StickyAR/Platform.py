@@ -56,10 +56,17 @@ if __name__ == "__main__":
 
     logo = thorpy.Image.make(thorpy.load_image("Logo.png"))
     sticky_jump_image = "StickyJump.png"
-    e_play = thorpy.make_image_button(sticky_jump_image,sticky_jump_image,sticky_jump_image)
-    e_calibrate = thorpy.make_button("calibrate", calibrate)
-    e_quit = thorpy.make_button("Quit", thorpy.functions.quit_menu_func)
-    elements = [logo, e_play, e_calibrate, e_quit]
+    sticky_jump_image_hover = "StickyJumpHover.png"
+    sticky_jam_image = "StickyJam.png"
+    reset_image = "StickyReset.png"
+    quit_image = "Credits.png"
+    quit_image_hover = "CreditsHover.png"
+    e_play = thorpy.make_image_button(sticky_jump_image,sticky_jump_image_hover,sticky_jump_image_hover)
+    e_play.user_func = play
+    e_play_2 = thorpy.make_image_button(sticky_jam_image,sticky_jam_image,sticky_jam_image)
+    e_quit = thorpy.make_image_button(quit_image,quit_image_hover,quit_image_hover)
+    e_quit.user_func = thorpy.functions.quit_menu_func
+    elements = [logo, e_play, e_play_2, e_quit]
     background = thorpy.load_image("white.png")
     e_bckgr = thorpy.Background.make(image=background, elements=elements)
     thorpy.store(e_bckgr)
