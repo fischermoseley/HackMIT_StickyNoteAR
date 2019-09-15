@@ -3,7 +3,7 @@ import random
 from settings import *
 from sprites import *
 
-class Game:
+class StickyJump:
     def __init__(self):
         # initialize game window, etc
         pg.init()
@@ -53,6 +53,10 @@ class Game:
                     self.playing = False
                 self.running = False
             if event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    if self.playing:
+                        self.playing = False
+                    self.running = False
                 if event.key == pg.K_SPACE:
                     self.player.jump()
 
@@ -71,10 +75,3 @@ class Game:
         # game over/continue
         pass
 
-g = Game()
-g.show_start_screen()
-while g.running:
-    g.new()
-    g.show_go_screen()
-
-pg.quit()

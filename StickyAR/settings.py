@@ -1,7 +1,7 @@
 # game options/settings
-TITLE = "Jumpy!"
-WIDTH = 1920    
-HEIGHT = 1080
+TITLE = "StickyJUMP"
+WIDTH = 600    
+HEIGHT = 400
 FPS = 60
 
 # Player properties
