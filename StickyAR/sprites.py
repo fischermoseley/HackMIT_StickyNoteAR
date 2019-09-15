@@ -4,21 +4,22 @@ from settings import *
 vec = pg.math.Vector2
 
 class Player(pg.sprite.Sprite):
-    def __init__(self, game):
+    def __init__(self, game, spawnx, spawny):
         pg.sprite.Sprite.__init__(self)
         self.game = game
         self.image = pg.Surface((30, 40))
         self.image.fill(YELLOW)
         self.rect = self.image.get_rect()
-        self.rect.center = (WIDTH / 2, HEIGHT / 2)
-        self.pos = vec(WIDTH / 2, HEIGHT / 2)
+
+        self.rect.center = (spawnx+30, spawny - 140)
+        self.pos = vec(spawnx+30, spawny - 140)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
 
     def jump(self):
         # jump only if standing on a platform
         self.rect.x += 1
-        hits = pg.sprite.spritecollide(self, self.game.platforms, False)
+        hits = pg.sprite.spritecollide(self, self.game.safeplatforms, False)
         self.rect.x -= 1
         if hits:
             self.vel.y = -20
@@ -37,10 +38,10 @@ class Player(pg.sprite.Sprite):
         self.vel += self.acc
         self.pos += self.vel + 0.5 * self.acc
         # wrap around the sides of the screen
-        if self.pos.x > WIDTH:
-            self.pos.x = 0
-        if self.pos.x < 0:
-            self.pos.x = WIDTH
+        #if self.pos.x > WIDTH:
+            #self.pos.x = 0
+        #if self.pos.x < 0:
+            #self.pos.x = WIDTH
 
         self.rect.midbottom = self.pos
 

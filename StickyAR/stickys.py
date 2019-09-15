@@ -17,7 +17,7 @@ pink = np.array([113, 60, 201])
 blue = np.array([195, 160, 126])
 
 grid_height = 768
-grid_width = 1064
+grid_width = 1024
 
 calib_image_path = "state/current_calib.png"
 state_image_path = "state/current_state.png"
@@ -126,16 +126,14 @@ def uncalibrate():
 	#if there already exists some calibration then we'll delete it
 	if(os.path.exists(calib_image_path)):
 		os.remove(calib_image_path)
-		return True
-	return False
 	
 
 def calibrate():
 	#if there already exists some calibration then we're just going to nope on out of here
-	if(os.path.exists(calib_image_path)): return False
+	if(os.path.exists(calib_image_path)): uncalibrate()
 
 	camera = cv.VideoCapture(1)
-	calib_image = camera.read()
+	return_value, calib_image = camera.read()
 	del(camera)
 	cv.imwrite(calib_image_path, calib_image)
 
@@ -145,13 +143,11 @@ def clearSticky():
 	#if there already exists some state then we'll delete it
 	if(os.path.exists(state_image_path)):
 		os.remove(state_image_path)
-		return True
-	return False
 
 def updateSticky():
 	if(not os.path.exists(state_image_path)):
-		camera = cv.VideoCapture(0)
-		_, state_image = camera.read()
+		camera = cv.VideoCapture(1)
+		return_value, state_image = camera.read()
 		camera.release()
 		cv.imwrite(state_image_path, state_image)
 	
