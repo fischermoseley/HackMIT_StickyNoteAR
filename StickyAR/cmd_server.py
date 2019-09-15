@@ -1,5 +1,6 @@
 from cmd import Cmd
-from boundingBox import updateFromCamera, calibrateFromCamera
+from stickys import updateSticky, clearSticky, calibrate, uncalibrate
+from .StickyAR.launch_game import launch_game
 
 
 class MyPrompt(Cmd):
@@ -14,7 +15,7 @@ class MyPrompt(Cmd):
 
     def do_p(self, inp):
         print("Entering the Game")  
-        #Luke command to enter the game
+        launch_game()
 
     def do_u(self, inp):
         print("Calibrating screen...")
