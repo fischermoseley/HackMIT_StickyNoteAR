@@ -10,9 +10,9 @@ class Player(pg.sprite.Sprite):
         self.image = pg.Surface((30, 40))
         self.image.fill(YELLOW)
         self.rect = self.image.get_rect()
-
-        self.rect.center = (spawnx+30, spawny - 140)
-        self.pos = vec(spawnx+30, spawny - 140)
+        
+        self.rect.center = (spawnx + 25, spawny - 100)
+        self.pos = vec(spawnx + 25, spawny - 100)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
 
@@ -38,13 +38,13 @@ class Player(pg.sprite.Sprite):
         self.vel += self.acc
         self.pos += self.vel + 0.5 * self.acc
         # wrap around the sides of the screen
-        #if self.pos.x > WIDTH:
-            #self.pos.x = 0
-        #if self.pos.x < 0:
-            #self.pos.x = WIDTH
+        if self.pos.x > WIDTH:
+            self.pos.x = 0
+        if self.pos.x < 0:
+            self.pos.x = WIDTH
 
         self.rect.midbottom = self.pos
-
+                
 class Platform(pg.sprite.Sprite):
     def __init__(self, x, y, w, h):
         pg.sprite.Sprite.__init__(self)
