@@ -171,7 +171,7 @@ def updateSticky():
 		bounding_box_coords.append(coord)
 
 	for coord in pink_coords:
-		#bounding_box_coords.append(coord)
+		bounding_box_coords.append(coord)
 
 	for coord in blue_coords:
 		bounding_box_coords.append(coord)
