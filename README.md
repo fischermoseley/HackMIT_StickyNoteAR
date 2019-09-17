@@ -29,4 +29,4 @@ StickyAR was designed to be as extensible as possible, so any future game that h
 
 Built With OpenCV, Pygame, and Python
 
-- Zach Rolfness, Tim Gutterman, Lucas Igel, Fischer Moseley
+Made by Zach Rolfness, Tim Gutterman, Lucas Igel, Fischer Moseley in 24 hours for HackMIT 2019.
