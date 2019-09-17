@@ -28,3 +28,5 @@ A whole ton about python, OpenCV, and how much we regret spending half our time 
 StickyAR was designed to be as extensible as possible, so any future game that has colored tiles as elements can take advantage of the computer vision interface we produced. We've already thought through the next game we want to make - StickyJam. It will be a music creation app that sends a line across the screen and produces notes when it strikes the sticky notes, allowing the player to vary their rhythm by placement and color.
 
 Built With OpenCV, Pygame, and Python
+
+- Zach Rolfness, Tim Gutterman, Lucas Igel, Fischer Moseley
