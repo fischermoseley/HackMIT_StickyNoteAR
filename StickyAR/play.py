@@ -31,7 +31,7 @@ class MyPrompt(Cmd):
         print("Stickies Updated")
 
     def do_q(self, inp):
-        '''quit'''
+        """Quit Game"""
         return True
 
 MyPrompt().cmdloop()

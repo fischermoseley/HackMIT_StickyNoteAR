@@ -61,7 +61,7 @@ def order_points(pts):
 	xSorted = pts[np.argsort(pts[:, 0]), :]
  
 	# grab the left-most and right-most points from the sorted
-	# x-roodinate points
+	# x-coordinate points
 	leftMost = xSorted[:2, :]
 	rightMost = xSorted[2:, :]
  
