@@ -16,7 +16,8 @@ from time import sleep
 DEFAULT_CV = [(150,200,50,50,"blue"), (275,200,50,50,"orange"), (375,200,50,50,"green"), (450,200,50,50,"pink")]
 
 class StickyJump:
-    def __init__(self, cv_data):
+    def __init__(self, cv_data, debug_mode):
+        self.debug_mode = debug_mode
         # Check if CV data pipeline is operational, and use default data if not
         if cv_data is None:
             self.cv_data = DEFAULT_CV
@@ -28,7 +29,10 @@ class StickyJump:
         # Initialize game window
         pg.init()
         pg.mixer.init()
-        self.screen = pg.display.set_mode((WIDTH, HEIGHT),flags=pg.FULLSCREEN)
+        if debug_mode:
+            self.screen = pg.display.set_mode((WIDTH, HEIGHT))
+        else:
+            self.screen = pg.display.set_mode((WIDTH, HEIGHT),flags=pg.FULLSCREEN)
         pg.display.set_caption(TITLE)
         
         #Basic procedural game settings
@@ -51,17 +55,17 @@ class StickyJump:
             sticky_color = sticky[-1]
             # Different types of platforms correspond to different sticky note colors
             if sticky_color == "green":
-                p = WinSticky(*plat)
+                p = WinSticky(debug_mode=self.debug_mode,*plat)
                 self.safeplatforms.add(p)
                 self.winplatform.add(p)
                 
             elif sticky_color == "blue":
-                p = WalkSticky(*plat)
+                p = WalkSticky(debug_mode=self.debug_mode,*plat)
                 self.safeplatforms.add(p)
             
             # Orange sticky is the spawn platform; only expect one of these
             elif sticky_color == "orange":
-                p = SpawnSticky(*plat)
+                p = SpawnSticky(debug_mode=self.debug_mode,*plat)
                 self.safeplatforms.add(p)
                 self.spawnplatform.add(p)
                 # Add spawn coords to overall StickyJump game settings
@@ -70,7 +74,7 @@ class StickyJump:
                 
             elif sticky_color == "pink":
                 # If it's a death sticky, it belongs to a group of platforms reserved for death stickies
-                p = DieSticky(*plat)
+                p = DieSticky(debug_mode=self.debug_mode,*plat)
                 self.deathplatforms.add(p)
                 
             self.all_sprites.add(p)
@@ -175,6 +179,7 @@ class StickyJump:
                     
                 # 'U' key means resticky and start new game
                 if event.key == pg.K_u:
+                    print("restickying")
                     self.resticky()
                     
     def draw(self):

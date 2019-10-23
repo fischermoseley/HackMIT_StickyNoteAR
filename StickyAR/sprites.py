@@ -56,31 +56,35 @@ class Player(pg.sprite.Sprite):
                 
 class Platform(pg.sprite.Sprite):
     """Superclass for all game platform sprites"""
-    def __init__(self, x, y, w, h):
+    def __init__(self, x, y, w, h, debug_mode=False):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.Surface((w, h))
-        self.image.fill(BLUE)
+        self.image.fill(BLACK)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
 
 """Different flavors of sticky note platforms"""
 class WalkSticky(Platform):
-    def __init__(self, x, y, w, h):
+    def __init__(self, x, y, w, h,debug_mode=False):
         Platform.__init__(self, x, y, w, h)
-        self.image.fill(BLUE)
+        if debug_mode:
+            self.image.fill(BLUE)
 
 class SpawnSticky(Platform):
-    def __init__(self, x, y, w, h):
+    def __init__(self, x, y, w, h,debug_mode=False):
         Platform.__init__(self, x, y, w, h)
-        self.image.fill(ORANGE)
+        if debug_mode:
+            self.image.fill(ORANGE)
 
 class DieSticky(Platform):
-    def __init__(self, x, y, w, h):
+    def __init__(self, x, y, w, h, debug_mode=False):
         Platform.__init__(self, x, y, w, h)
-        self.image.fill(PINK)
+        if debug_mode:
+            self.image.fill(PINK)
         
 class WinSticky(Platform):
-    def __init__(self, x, y, w, h):
+    def __init__(self, x, y, w, h, debug_mode=False):
         Platform.__init__(self, x, y, w, h)
-        self.image.fill(GREEN)
+        if debug_mode:
+            self.image.fill(GREEN)
