@@ -17,7 +17,6 @@ class MyPrompt(Cmd):
     def do_p(self, inp):
         print("Entering the Game")
         currentState = updateSticky()
-        print("attempt at retrieving currentState")
         print(currentState)
         launch_game(currentState)
     

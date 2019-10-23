@@ -4,8 +4,10 @@ Proprietary content of StickyAR, 2019
 Brought to you by Luke Igel, Fischer Moseley, Tim Gutterman, and Zach Rolfness
 """
 TITLE = "StickyJUMP"
+
 WIDTH = 1024 
 HEIGHT = 768
+
 FPS = 60
 
 # Player properties
