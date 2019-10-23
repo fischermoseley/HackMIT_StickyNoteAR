@@ -16,8 +16,8 @@ green = np.array([73, 138, 125])
 pink = np.array([113, 60, 201])
 blue = np.array([195, 160, 126])
 
-grid_width = 800
-grid_height = 600
+grid_height = 768
+grid_width = 1024
 
 calib_image_path = "state/current_calib.png"
 state_image_path = "state/current_state.png"
@@ -60,10 +60,11 @@ def order_points(pts):
     # sort the points based on their x-coordinates
     xSorted = pts[np.argsort(pts[:, 0]), :]
  
-    # grab the left-most and right-most points from the sorted
-    # x-roodinate points
-    leftMost = xSorted[:2, :]
-    rightMost = xSorted[2:, :]
+	# grab the left-most and right-most points from the sorted
+	# x-coordinate points
+	leftMost = xSorted[:2, :]
+	rightMost = xSorted[2:, :]
+
  
     # now, sort the left-most coordinates according to their
     # y-coordinates so we can grab the top-left and bottom-left
@@ -123,35 +124,62 @@ def lookForBlue(image, transform_matrix, grid_width, grid_height):
 	return lookForColor(image, transform_matrix, blue, "blue", 35, 40, grid_width, grid_height)
 
 def uncalibrate():
-    #if there already exists some calibration then we'll delete it
-    if(os.path.exists(calib_image_path)):
-        os.remove(calib_image_path)
-        return True
-    return False
-    
+	#if there already exists some calibration then we'll delete it
+	if(os.path.exists(calib_image_path)):
+		os.remove(calib_image_path)
+	
 
 def calibrate():
-    #if there already exists some calibration then we're just going to nope on out of here
-    #if(os.path.exists(calib_image_path)): return False
-    camera = cv.VideoCapture(1)
-    retval, frame = camera.read()
-    cv.imwrite(calib_image_path, frame)
-    camera.release()
-    #cv.imwrite(calib_image_path, calib_image)
+	#if there already exists some calibration then we're just going to nope on out of here
+	if(os.path.exists(calib_image_path)): uncalibrate()
 
-    #return genCalTransformMatrix(calib_image, red, 90, 80, grid_width, grid_height)
+	camera = cv.VideoCapture(1)
+	return_value, calib_image = camera.read()
+	del(camera)
+	cv.imwrite(calib_image_path, calib_image)
+
+	return genCalTransformMatrix(calib_image, red, 90, 80, grid_width, grid_height)
 
 def clearSticky():
-    #if there already exists some state then we'll delete it
-    if(os.path.exists(state_image_path)):
-        os.remove(state_image_path)
-        return True
-    return False
+	#if there already exists some state then we'll delete it
+	if(os.path.exists(state_image_path)):
+		os.remove(state_image_path)
+
+def reSticky():
+	clearSticky()
+	camera = cv.VideoCapture(1)
+	return_value, state_image = camera.read()
+	camera.release()
+	cv.imwrite(state_image_path, state_image)
+	
+	state_image = cv.imread("state/current_state.png")
+
+	calib_image = cv.imread("state/current_calib.png")
+	transform_matrix = genCalTransformMatrix(calib_image, red, 90, 80, grid_width, grid_height)
+
+	state_image_transformed = cv.warpPerspective(state_image, transform_matrix, (grid_width, grid_height))
+
+	bounding_box_coords, _ = lookForGreen(state_image_transformed, transform_matrix, grid_width, grid_height)
+	orange_coords, _ = lookForOrange(state_image_transformed, transform_matrix, grid_width, grid_height)
+	pink_coords, _ = lookForPink(state_image_transformed, transform_matrix, grid_width, grid_height)
+	blue_coords, _ = lookForBlue(state_image_transformed, transform_matrix, grid_width, grid_height)
+
+	for coord in orange_coords:
+		bounding_box_coords.append(coord)
+
+	for coord in pink_coords:
+		bounding_box_coords.append(coord)
+
+	for coord in blue_coords:
+		bounding_box_coords.append(coord)
+
+	return bounding_box_coords
+
 
 def updateSticky():
 	if(not os.path.exists(state_image_path)):
-		camera = cv.VideoCapture(0)
-		_, state_image = camera.read()
+		camera = cv.VideoCapture(1)
+		return_value, state_image = camera.read()
 		camera.release()
 		cv.imwrite(state_image_path, state_image)
 	
@@ -159,6 +187,9 @@ def updateSticky():
 
 	calib_image = cv.imread(calib_image_path)
 	transform_matrix = genCalTransformMatrix(calib_image, red, 90, 80, grid_width, grid_height)
+
+	state_image_transformed = cv.warpPerspective(state_image, transform_matrix, (grid_width, grid_height))
+	cv.imwrite("state_image_transformed.png", state_image_transformed)
 
 
 	bounding_box_coords = lookForGreen(state_image, transform_matrix, grid_width, grid_height)
@@ -170,12 +201,9 @@ def updateSticky():
         bounding_box_coords.append(coord)
 
 	for coord in pink_coords:
-<<<<<<< HEAD
-=======
 		bounding_box_coords.append(coord)
 
 	for coord in blue_coords:
->>>>>>> parent of efdf015... Entered the Age of Augmented Reality
 		bounding_box_coords.append(coord)
 
     for coord in blue_coords:

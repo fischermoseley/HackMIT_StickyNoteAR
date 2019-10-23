@@ -1,22 +1,21 @@
-# game options/settings
+"""
+Game options/settings for StickyJump platformer game
+Proprietary content of StickyAR, 2019
+Brought to you by Luke Igel, Fischer Moseley, Tim Gutterman, and Zach Rolfness
+"""
 TITLE = "StickyJUMP"
-WIDTH = 600    
-HEIGHT = 400
+
+WIDTH = 1024 
+HEIGHT = 768
+
 FPS = 60
 
 # Player properties
 PLAYER_ACC = 0.5
-PLAYER_FRICTION = -0.12
+PLAYER_FRICTION = -0.12 #PLAYER_FRICTION >= 0 will lead to infinite sliding
 PLAYER_GRAV = 0.8
 
-# Starting platforms
-PLATFORM_LIST = [(0, HEIGHT - 40, WIDTH, 40),
-                 (WIDTH / 2 - 50, HEIGHT * 3 / 4, 100, 20),
-                 (125, HEIGHT - 350, 100, 20),
-                 (350, 200, 100, 20),
-                 (175, 100, 50, 20)]
-
-# define colors
+# Define colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -26,12 +25,3 @@ YELLOW = (255, 255, 0)
 LIGHTBLUE = (0, 155, 155)
 PINK = (255, 69, 178)
 ORANGE = (255, 165, 0)
-
-# color_dict = {
-#     "blue": WalkSticky(Platform),
-#     "orange": SpawnSticky(Platform),
-#     "pink": DieSticky(Platform),
-#     "pink": PINK,
-#     "orange": ORANGE
-# }
-

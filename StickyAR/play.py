@@ -5,11 +5,12 @@ from launch_game import launch_game
 
 class MyPrompt(Cmd):
     prompt = 'sticky_server> '
-    intro = "Welcome to StickyAR! Type H to list commands"
+    intro = "Welcome to StickyAR! Type h to list commands"
 
     def do_h(self, inp):
         print("Click P to Enter the Game")
         print("Click U to Calibrate the Screen")
+        print("Click D to Enter Debug Mode of Game")
         print("Click S to Update Stickies")
         print("Click Q to Quit the Game")
 
@@ -18,6 +19,13 @@ class MyPrompt(Cmd):
         currentState = updateSticky()
         print(currentState)
         launch_game(currentState)
+    
+    def do_d(self, inp):
+        print("Entering Debug Mode Game")
+        currentState = updateSticky()
+        print("attempt at retrieving currentState")
+        print(currentState)
+        launch_game(currentState, debug_mode=True)
 
     def do_u(self, inp):
         print("Calibrating screen...")
@@ -30,7 +38,7 @@ class MyPrompt(Cmd):
         print("Stickies Updated")
 
     def do_q(self, inp):
-        '''quit'''
+        """Quit Game"""
         return True
 
 MyPrompt().cmdloop()
